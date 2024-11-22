@@ -7,7 +7,21 @@ import models
 from sqlalchemy import select, and_
 import hashlib
 
-app = FastAPI()
+from timekeeping import start_task
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Starting up")
+    start_task()
+    yield
+    task.cancel() 
+    try:
+        await task
+    except asyncio.CancelledError:
+        print("Background task was cancelled.")
+
+app = FastAPI(lifespan=lifespan)
 # bro did NOT cook anything
 
 Session = async_sessionmaker(bind=models.engine)
@@ -53,5 +67,9 @@ async def hash_password(password):
     hash_object = hashlib.sha256(password_bytes)
     return hash_object.hexdigest()
 
+
+
+
 if __name__ == "__main__":
     uvicorn.run("main:app", reload=True, host="127.0.0.1", port=8000)
+
