@@ -109,13 +109,13 @@ async def create_message(request_data: EmailRequestCreateSchema, db: AsyncSessio
     try:
         async with db.begin():
             db.add(email_request_create)
-            db.commit()
-            db.refresh(email_request_create)
+            await db.commit()
+            await db.refresh(email_request_create)
 
         return JSONResponse(content={"success": True}, status_code=200) # email_request.dict()
     except Exception as e:
         await db.rollback()  # Roll back in case of an error
-        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {e}") 
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {e}")
 
 
 async def hash_password(password):
