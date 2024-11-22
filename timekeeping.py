@@ -2,6 +2,10 @@ import asyncio
 import datetime
 import pytz
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+import models
+from fastapi import Depends
+from email import message
 
 
 tz_cet = pytz.timezone('Europe/Warsaw')
@@ -25,31 +29,32 @@ fake_db = [
         'message': 'Lol it broke if it prints',
         'sent': False
     },
-    
+
 ]
 
-async def check_times(db: AsyncSession = Depends(models.get_db)) -> None:
+async def check_times() -> None:
     # TODO: Fetch times from database
-    while True:
-        query = await db.execute(select(models.EmailRequestCreate))
+    async with await models.get_db() as db:
+        while True:
+            query = await db.execute(select(models.EmailRequestCreate))
+            row = query.all()
+            for user in row:
+                print(user)
+                # send_date = tz_cet.localize(row.)
 
-        while row := query.fetchone() is not None:
-            pass
-            # send_date = tz_cet.localize(row.)
-            
 
-        # now_time = datetime.datetime.now(tz_cet)
-        # for i, entry in enumerate(fake_db):
-        #     # TODO: Check hour
+            # now_time = datetime.datetime.now(tz_cet)
+            # for i, entry in enumerate(fake_db):
+            #     # TODO: Check hour
 
-        #     send_date = tz_cet.localize(entry['date_to_send'])
-        #     if now_time > send_date and not entry['sent']:
-        #         # TODO: Send message here
-        #         print(entry['message'])
+            #     send_date = tz_cet.localize(entry['date_to_send'])
+            #     if now_time > send_date and not entry['sent']:
+            #         # TODO: Send message here
+            #         print(entry['message'])
 
-        #         entry['sent'] = True
+            #         entry['sent'] = True
 
-        await asyncio.sleep(5) # TODO: Make this every minute
+            await asyncio.sleep(5) # TODO: Make this every minute
 
 def start_task() -> None:
     asyncio.create_task(check_times())
