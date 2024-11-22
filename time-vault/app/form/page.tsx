@@ -55,6 +55,7 @@ const Form = () => {
             )}
           </div>
           <div>
+            <label htmlFor="target">Due:</label>
             <input
               id="due"
               {...register("due", {
@@ -72,6 +73,9 @@ const Form = () => {
               placeholder="Due Year"
               name="due"
             />
+            {errors.target && (
+              <p style={{ color: "red" }}>{errors.due?.message}</p>
+            )}
           </div>
           <button type="submit" disabled={isSubmitting}>
             Submit
