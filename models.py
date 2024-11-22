@@ -1,9 +1,9 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 import uuid
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column
-from sqlalchemy import String
+from sqlalchemy import String, DateTime
 from pydantic import BaseModel, EmailStr
-
+import datetime
 
 from sqlalchemy_utils import UUIDType
 
@@ -55,32 +55,37 @@ class User(Base):
         }
 
 
-class EmailRequest(BaseModel):
-    user_id: uuid.UUID
-    sender: str
-    receiver: str
+class EmailRequestCreateSchema(BaseModel):
+    user_id: uuid.UUID | None = None
+    sender: EmailStr
+    receiver: EmailStr
+    date_to_send: datetime.datetime
+    message: str
+
 
 class EmailRequestCreate(Base):
     __tablename__ = "emails_sent"
 
     user_id: Mapped[uuid.UUID] = mapped_column("user_id", UUIDType(binary=False), primary_key=True, index=True)
-
     sender: Mapped[String] = mapped_column("sender", String, nullable=False, unique=True)
     receiver: Mapped[String] = mapped_column("receiver", String, nullable=False)
+    date_to_send: Mapped[datetime.datetime] = mapped_column("date_to_send", DateTime, nullable=False)
+    message: Mapped[String] = mapped_column("message", String, nullable=False)
 
-    def __init__(self, user_id, sender, receiver):
+    def __init__(self, user_id, sender, receiver, date_to_send, message):
         self.user_id = user_id
         self.sender = sender
         self.receiver = receiver
+        self.date_to_send = date_to_send
+        self.message = message
 
     def dict(self):
         return {
             "id": self.user_id,
             "email": self.sender,
             "name": self.receiver,
+            "date_to_send": self.date_to_send,
+            "message": self.message,
         }
 
-class EmailRequestCreateSchema(BaseModel):
-    user_id: uuid.UUID | None = None  # Optional, auto-generated if not provided
-    sender: EmailStr
-    receiver: EmailStr
+
