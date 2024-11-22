@@ -31,14 +31,15 @@ async def check_times() -> None:
     while True:
         now_time = datetime.datetime.now(tz_cet)
         for i, entry in enumerate(fake_db):
+            # TODO: Check hour
             send_date = tz_cet.localize(entry['date_to_send'])
             if now_time > send_date and not entry['sent']:
                 # TODO: Send message here
-                print(entry['sent'])
+                print(entry['message'])
 
                 entry['sent'] = True
 
-        await asyncio.sleep(5)
+        await asyncio.sleep(5) # TODO: Make this every minute
 
 def start_task() -> None:
     asyncio.create_task(check_times())
