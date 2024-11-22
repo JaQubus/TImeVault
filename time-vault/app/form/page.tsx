@@ -7,6 +7,7 @@ import ApiLinks from "../apiLinks";
 import PageTemplate from "../templates/pageTemplate";
 import FormErrorWrap from "../templates/formErrorWrap";
 import { argv0 } from "process";
+import FormErrorParahraph from "../templates/formErrorParagraph";
 
 const Form = () => {
   type FormProps = DefaultForm;
@@ -50,9 +51,9 @@ const Form = () => {
               placeholder="Your Target"
               name="target"
             />
-            {errors.target && (
-              <p style={{ color: "red" }}>{errors.target.message}</p>
-            )}
+            <FormErrorParahraph
+              errorObject={errors.target}
+            ></FormErrorParahraph>
           </div>
           <div>
             <label htmlFor="target">Due:</label>
@@ -73,9 +74,7 @@ const Form = () => {
               placeholder="Due Year"
               name="due"
             />
-            {errors.target && (
-              <p style={{ color: "red" }}>{errors.due?.message}</p>
-            )}
+            <FormErrorParahraph errorObject={errors.due}></FormErrorParahraph>
           </div>
           <button type="submit" disabled={isSubmitting}>
             Submit

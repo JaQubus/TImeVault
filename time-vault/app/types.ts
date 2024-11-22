@@ -8,4 +8,5 @@ export type AppUser = {
   userId: string | null;
   email: string | null;
   username: string | null;
+  canContinue: boolean | null;
 };
