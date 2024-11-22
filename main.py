@@ -1,3 +1,4 @@
+from pydantic.types import Json
 from sqlalchemy.ext.asyncio.session import async_sessionmaker
 from starlette.responses import JSONResponse
 import uvicorn
@@ -6,6 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import models
 from sqlalchemy import select, and_
 import hashlib
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 from timekeeping import start_task
 from contextlib import asynccontextmanager
@@ -60,7 +64,27 @@ async def login(request: Request, db: AsyncSession = Depends(models.get_db)) -> 
         return JSONResponse(content={"Error": f"Unexpected Error {e}"}, status_code=500)
 
 
-@app.get("/send_email")
+@app.get("/send_email/{email_data}")
+async def send_email(email: Json, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
+    try:
+        msg = MIMEText(body.message, "html")
+        msg['Subject'] = body.subject
+        msg['From'] = f'Denolyrics <{OWN_EMAIL}>'
+        msg['To'] = body.to
+
+        port = 465  # For SSL
+
+        # Connect to the email server
+        server = SMTP_SSL("mail.privateemail.com", port)
+        server.login(OWN_EMAIL, OWN_EMAIL_PASSWORD)
+
+        # Send the email
+        server.send_message(msg)
+        server.quit()
+        return {"message": "Email sent successfully"}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=e)
 
 async def hash_password(password):
     password_bytes = password.encode('utf-8')
