@@ -66,28 +66,26 @@ async def login(request: Request, db: AsyncSession = Depends(models.get_db)) -> 
 
 
 @app.get("/send_email/{email_data}")
-async def send_email(email: Json, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
+async def send_email(email_data: dict, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
     try:
-        # Create the email
         email = EmailMessage()
-        email["From"] = "jakubkulik20@gmail.com"
-        email["To"] = email_request.recipient
-        email["Subject"] = email_request.subject
-        email.set_content(email_request.message)
+        email["From"] = "timevault063@gmail.com"
+        email["To"] = "lekstomek602@gmail.com"
+        email["Subject"] = "TimeValut"
+        email.set_content("Test")
 
-        # Connect to the Gmail SMTP server
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as smtp:
-            smtp.starttls()  # Start TLS encryption
-            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)  # Login to your email
-            smtp.send_message(email)  # Send the email
+        with smtplib.SMTP("smtp.gmail.com", 465) as smtp:
+            smtp.starttls()
+            smtp.login("timevault063@gmail.com", "qazxsw2.")
+            smtp.send_message(email)
 
-        return {"success": True, "message": f"Email sent to {email_request.recipient}"}
+        return JSONResponse({"success": True, "message": f"Email sent to {email_data['email']}"})
 
     except smtplib.SMTPException as e:
-        raise HTTPException(status_code=500, detail=f"Failed to send email: {e}")
+        return JSONResponse(content={"error": f"Unexpected error: {e}"}, status_code=500)
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {e}")
+        return JSONResponse(content={"error": f"Unexpected error: {e}"}, status_code=500)
 
 async def hash_password(password):
     password_bytes = password.encode('utf-8')
