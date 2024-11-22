@@ -14,6 +14,7 @@ from smtplib import SMTP
 from timekeeping import start_task
 from email.message import EmailMessage
 from contextlib import asynccontextmanager
+from email.mime.text import MIMEText
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -66,34 +67,41 @@ async def login(request: Request, db: AsyncSession = Depends(models.get_db)) -> 
 
 
 @app.get("/send_email/{email_data}")
-async def send_email(email_data: dict, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
+async def send_email(email_data: str, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
     try:
-        email = EmailMessage()
-        email["From"] = "timevault063@gmail.com"
-        email["To"] = "lekstomek602@gmail.com"
-        email["Subject"] = "TimeValut"
-        email.set_content("Test")
+        sender_email = "electrovision.auth@gmail.com"
+        sender_password = "ddsm atmm sfjf mlhl"
+        recipient_email = "lekstomek602@gmail.com"
+        subject = "Hello from Python"
+        body = """
+        <html>
+          <body>
+            <p>This is an <b>HTML</b> email sent from Python using the Gmail SMTP server.</p>
+          </body>
+        </html>
+        """
+        html_message = MIMEText(body, 'html')
+        html_message['Subject'] = subject
+        html_message['From'] = sender_email
+        html_message['To'] = recipient_email
+        with smtplib.SMTP('smtp.gmail.com', 587) as server:
+                server.starttls()
+                server.login(sender_email, sender_password)
+                server.sendmail(sender_email, recipient_email, html_message.as_string())
+                print("Email sent successfully!")
 
-        with smtplib.SMTP("smtp.gmail.com", 465) as smtp:
-            smtp.starttls()
-            smtp.login("timevault063@gmail.com", "qazxsw2.")
-            smtp.send_message(email)
-
-        return JSONResponse({"success": True, "message": f"Email sent to {email_data['email']}"})
+        return JSONResponse({"success": True, "message": "Email sent to"})
 
     except smtplib.SMTPException as e:
-        return JSONResponse(content={"error": f"Unexpected error: {e}"}, status_code=500)
+        return JSONResponse(content={"error": f"Unexpected error: {e}"}, status_code=418)
 
     except Exception as e:
-        return JSONResponse(content={"error": f"Unexpected error: {e}"}, status_code=500)
+        return JSONResponse(content={"error": f"Unexpected error: {e}"}, status_code=418)
 
 async def hash_password(password):
     password_bytes = password.encode('utf-8')
     hash_object = hashlib.sha256(password_bytes)
     return hash_object.hexdigest()
-
-
-
 
 if __name__ == "__main__":
     uvicorn.run("main:app", reload=True, host="127.0.0.1", port=8000)
