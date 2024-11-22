@@ -22,6 +22,10 @@ async def get_db() -> AsyncSession:
     await SessionLocal().close()
     return SessionLocal()
 
+# async def get_db() -> AsyncSession:
+#     async with SessionLocal() as session:  # Correctly using session
+#         yield session  # FastAPI will handle session closure automatically
+
 class UserCreate(BaseModel):
     user_id: uuid.UUID
     email: EmailStr
@@ -52,14 +56,14 @@ class User(Base):
 
 
 class EmailRequest(BaseModel):
-    email_id: uuid.UUID
+    user_id: uuid.UUID
     sender: str
     receiver: str
 
 class EmailRequestCreate(Base):
     __tablename__ = "emails_sent"
 
-    email_id: Mapped[uuid.UUID] = mapped_column("email_id", UUIDType(binary=False), primary_key=True, index=True)
+    user_id: Mapped[uuid.UUID] = mapped_column("user_id", UUIDType(binary=False), primary_key=True, index=True)
 
     sender: Mapped[String] = mapped_column("sender", String, nullable=False, unique=True)
     receiver: Mapped[String] = mapped_column("receiver", String, nullable=False)
@@ -67,7 +71,7 @@ class EmailRequestCreate(Base):
     def __init__(self, user_id, sender, receiver):
         self.user_id = user_id
         self.sender = sender
-        self.receiver= receiver
+        self.receiver = receiver
 
     def dict(self):
         return {
@@ -75,3 +79,8 @@ class EmailRequestCreate(Base):
             "email": self.sender,
             "name": self.receiver,
         }
+
+class EmailRequestCreateSchema(BaseModel):
+    user_id: uuid.UUID | None = None  # Optional, auto-generated if not provided
+    sender: EmailStr
+    receiver: EmailStr

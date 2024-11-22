@@ -2,7 +2,7 @@ from pydantic.types import Json
 from sqlalchemy.ext.asyncio.session import async_sessionmaker
 from starlette.responses import JSONResponse
 import uvicorn
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 import models
 from sqlalchemy import select, and_
@@ -15,6 +15,9 @@ from timekeeping import start_task
 from email.message import EmailMessage
 from contextlib import asynccontextmanager
 from email.mime.text import MIMEText
+import uuid
+from models import EmailRequestCreateSchema, EmailRequestCreate
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -97,6 +100,23 @@ async def send_email(email_data: str, db: AsyncSession = Depends(models.get_db))
 
     except Exception as e:
         return JSONResponse(content={"error": f"Unexpected error: {e}"}, status_code=418)
+
+@app.post("/create_message")
+async def create_message(request_data: EmailRequestCreateSchema, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
+    if not db:
+        raise HTTPException(status_code=500, detail="Database session is None")
+    email_request_create = EmailRequestCreate(**request_data.dict())
+    try:
+        async with db.begin():
+            db.add(email_request_create)
+            db.commit()
+            db.refresh(email_request_create)
+
+        return JSONResponse(content={"success": True}, status_code=200) # email_request.dict()
+    except Exception as e:
+        await db.rollback()  # Roll back in case of an error
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {e}") 
+
 
 async def hash_password(password):
     password_bytes = password.encode('utf-8')
