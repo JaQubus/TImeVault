@@ -17,7 +17,7 @@ from contextlib import asynccontextmanager
 from email.mime.text import MIMEText
 import uuid
 from models import EmailRequestCreateSchema, EmailRequestCreate
-
+from sqlalchemy.exc import SQLAlchemyError
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -68,6 +68,39 @@ async def login(request: Request, db: AsyncSession = Depends(models.get_db)) -> 
         print(e)
         return JSONResponse(content={"Error": f"Unexpected Error {e}"}, status_code=500)
 
+@app.post("/login/register")
+async def create_user(request: Request, db: AsyncSession = Depends(models.get_db)):
+
+    try:
+        data = await request.json()
+        print(data)
+
+        data["user_id"] = uuid.uuid4()
+
+        user_data = models.UserCreate.model_validate(data)
+
+        if len(user_data.password) < 3:
+            raise HTTPException(status_code=400, detail="Password is too short min 4 chars required")
+
+        user_data.password = await hash_password(user_data.password)
+        db_user = models.User(**user_data.model_dump())
+        db.add(db_user)
+
+        data["password"] = user_data.password
+        data["user_id"] = str(user_data.user_id)
+
+        await db.commit()
+        await db.refresh(db_user)
+        await db.close()
+        return JSONResponse(content={"Success": "User created successfully"}, status_code=200)
+
+    except SQLAlchemyError as sqle:
+        print(sqle)
+        return JSONResponse(content={"Error": f"Sql error {sqle}"}, status_code=500)
+    except Exception as e:
+        print(e)
+        return JSONResponse(content={"Error": f"Unexpected error {e}"}, status_code=500)
+
 
 @app.get("/send_email/{email_data}")
 async def send_email(email_data: str, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
@@ -103,8 +136,6 @@ async def send_email(email_data: str, db: AsyncSession = Depends(models.get_db))
 
 @app.post("/create_message")
 async def create_message(request_data: EmailRequestCreateSchema, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
-    if not db:
-        raise HTTPException(status_code=500, detail="Database session is None")
     email_request_create = EmailRequestCreate(**request_data.dict())
     try:
         async with db.begin():
