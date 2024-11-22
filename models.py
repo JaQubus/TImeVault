@@ -37,7 +37,7 @@ class User(Base):
     username: Mapped[String] = mapped_column("username", String, nullable=False)
     password: Mapped[String] = mapped_column("password", String, nullable=False)
 
-    def __init__(self, user_id, email, username, password, sex, image):
+    def __init__(self, user_id, email, username, password):
         self.user_id = user_id
         self.email = email
         self.username = username
@@ -48,4 +48,30 @@ class User(Base):
             "id": self.user_id,
             "email": self.email,
             "name": self.username,
+        }
+
+
+class EmailRequest(BaseModel):
+    email_id: uuid.UUID
+    sender: str
+    receiver: str
+
+class EmailRequestCreate(Base):
+    __tablename__ = "emails_sent"
+
+    email_id: Mapped[uuid.UUID] = mapped_column("email_id", UUIDType(binary=False), primary_key=True, index=True)
+
+    sender: Mapped[String] = mapped_column("sender", String, nullable=False, unique=True)
+    receiver: Mapped[String] = mapped_column("receiver", String, nullable=False)
+
+    def __init__(self, user_id, sender, receiver):
+        self.user_id = user_id
+        self.sender = sender
+        self.receiver= receiver
+
+    def dict(self):
+        return {
+            "id": self.user_id,
+            "email": self.sender,
+            "name": self.receiver,
         }

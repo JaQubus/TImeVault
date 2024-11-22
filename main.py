@@ -10,8 +10,9 @@ import hashlib
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
+from smtplib import SMTP
 from timekeeping import start_task
+from email.message import EmailMessage
 from contextlib import asynccontextmanager
 
 @asynccontextmanager
@@ -19,7 +20,7 @@ async def lifespan(app: FastAPI):
     print("Starting up")
     start_task()
     yield
-    task.cancel() 
+    task.cancel()
     try:
         await task
     except asyncio.CancelledError:
@@ -67,24 +68,26 @@ async def login(request: Request, db: AsyncSession = Depends(models.get_db)) -> 
 @app.get("/send_email/{email_data}")
 async def send_email(email: Json, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
     try:
-        msg = MIMEText(body.message, "html")
-        msg['Subject'] = body.subject
-        msg['From'] = f'Denolyrics <{OWN_EMAIL}>'
-        msg['To'] = body.to
+        # Create the email
+        email = EmailMessage()
+        email["From"] = "jakubkulik20@gmail.com"
+        email["To"] = email_request.recipient
+        email["Subject"] = email_request.subject
+        email.set_content(email_request.message)
 
-        port = 465  # For SSL
+        # Connect to the Gmail SMTP server
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as smtp:
+            smtp.starttls()  # Start TLS encryption
+            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)  # Login to your email
+            smtp.send_message(email)  # Send the email
 
-        # Connect to the email server
-        server = SMTP_SSL("mail.privateemail.com", port)
-        server.login(OWN_EMAIL, OWN_EMAIL_PASSWORD)
+        return {"success": True, "message": f"Email sent to {email_request.recipient}"}
 
-        # Send the email
-        server.send_message(msg)
-        server.quit()
-        return {"message": "Email sent successfully"}
+    except smtplib.SMTPException as e:
+        raise HTTPException(status_code=500, detail=f"Failed to send email: {e}")
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=e)
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {e}")
 
 async def hash_password(password):
     password_bytes = password.encode('utf-8')
@@ -96,4 +99,3 @@ async def hash_password(password):
 
 if __name__ == "__main__":
     uvicorn.run("main:app", reload=True, host="127.0.0.1", port=8000)
-
