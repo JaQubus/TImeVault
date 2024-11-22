@@ -138,7 +138,7 @@ async def send_email(email_data: str, db: AsyncSession = Depends(models.get_db))
 async def create_message(request_data: EmailRequestCreateSchema, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
     email_request_create = EmailRequestCreate(**request_data.dict())
     try:
-        async with db.begin():
+        async with db:
             db.add(email_request_create)
             await db.commit()
             await db.refresh(email_request_create)

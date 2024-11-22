@@ -1,7 +1,8 @@
+from fastapi.datastructures import Default
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 import uuid
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column
-from sqlalchemy import String, DateTime
+from sqlalchemy import String, DateTime, ForeignKey
 from pydantic import BaseModel, EmailStr
 import datetime
 
@@ -56,6 +57,7 @@ class User(Base):
 
 
 class EmailRequestCreateSchema(BaseModel):
+    email_id: uuid.UUID | None = None
     user_id: uuid.UUID | None = None
     sender: EmailStr
     receiver: EmailStr
@@ -66,13 +68,15 @@ class EmailRequestCreateSchema(BaseModel):
 class EmailRequestCreate(Base):
     __tablename__ = "emails_sent"
 
-    user_id: Mapped[uuid.UUID] = mapped_column("user_id", UUIDType(binary=False), primary_key=True, index=True)
-    sender: Mapped[String] = mapped_column("sender", String, nullable=False, unique=True)
+    email_id: Mapped[uuid.UUID] = mapped_column("email_id", UUIDType(binary=False), primary_key=True, index=True, default=uuid.uuid4())
+    user_id: Mapped[uuid.UUID] = mapped_column("user_id", UUIDType(binary=False), ForeignKey("users.user_id"))
+    sender: Mapped[String] = mapped_column("sender", String, nullable=False)
     receiver: Mapped[String] = mapped_column("receiver", String, nullable=False)
     date_to_send: Mapped[datetime.datetime] = mapped_column("date_to_send", DateTime, nullable=False)
     message: Mapped[String] = mapped_column("message", String, nullable=False)
 
-    def __init__(self, user_id, sender, receiver, date_to_send, message):
+    def __init__(self, email_id, user_id, sender, receiver, date_to_send, message):
+        self.email_id
         self.user_id = user_id
         self.sender = sender
         self.receiver = receiver
@@ -87,5 +91,3 @@ class EmailRequestCreate(Base):
             "date_to_send": self.date_to_send,
             "message": self.message,
         }
-
-
