@@ -5,7 +5,6 @@ from sqlalchemy.orm import declarative_base, Mapped, mapped_column
 from sqlalchemy import String, DateTime, ForeignKey
 from pydantic import BaseModel, EmailStr
 import datetime
-
 from sqlalchemy_utils import UUIDType
 
 Base = declarative_base()

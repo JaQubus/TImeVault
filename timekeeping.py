@@ -1,6 +1,8 @@
 import asyncio
 import datetime
 import pytz
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 tz_cet = pytz.timezone('Europe/Warsaw')
 
@@ -26,18 +28,26 @@ fake_db = [
     
 ]
 
-async def check_times() -> None:
+async def check_times(db: AsyncSession = Depends(models.get_db)) -> None:
     # TODO: Fetch times from database
     while True:
-        now_time = datetime.datetime.now(tz_cet)
-        for i, entry in enumerate(fake_db):
-            # TODO: Check hour
-            send_date = tz_cet.localize(entry['date_to_send'])
-            if now_time > send_date and not entry['sent']:
-                # TODO: Send message here
-                print(entry['message'])
+        query = await db.execute(select(models.EmailRequestCreate))
 
-                entry['sent'] = True
+        while row := query.fetchone() is not None:
+            pass
+            # send_date = tz_cet.localize(row.)
+            
+
+        # now_time = datetime.datetime.now(tz_cet)
+        # for i, entry in enumerate(fake_db):
+        #     # TODO: Check hour
+
+        #     send_date = tz_cet.localize(entry['date_to_send'])
+        #     if now_time > send_date and not entry['sent']:
+        #         # TODO: Send message here
+        #         print(entry['message'])
+
+        #         entry['sent'] = True
 
         await asyncio.sleep(5) # TODO: Make this every minute
 
