@@ -1,8 +1,8 @@
 export type CustomFormField = {
   title: string | null;
   due: Date | null;
-  caption?: string | null;
-  image?: string | null;
+  caption: string | null;
+  image: string | null;
 };
 
 export type DefaultForm = {

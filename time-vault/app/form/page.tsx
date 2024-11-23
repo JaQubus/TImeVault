@@ -16,8 +16,6 @@ const Form = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    getValues,
-    setError,
   } = useForm<FormProps>();
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
@@ -30,6 +28,7 @@ const Form = () => {
   };
 
   const { customformFields } = useUserDataContext();
+
   return (
     <PageTemplate>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -63,8 +62,11 @@ const Form = () => {
                 id="due"
                 {...register("due", {
                   validate: (due) => {
-                    if (due <= 0) return "Due year must be at least 1";
-                    if (due % 1 !== 0) return "Due year must be an integer";
+                    const dueYear = due;
+                    if (isNaN(dueYear)) return "Due must be a valid number";
+                    if (dueYear <= 0) return "Due year must be greater than 0";
+                    if (!Number.isInteger(dueYear))
+                      return "Due year must be an integer";
                     return true;
                   },
                   required: {
@@ -78,19 +80,21 @@ const Form = () => {
               />
               <FormErrorParahraph errorObject={errors.due}></FormErrorParahraph>
             </div>
-            <button type="submit" disabled={isSubmitting}>
-              Submit
-            </button>
           </FormErrorWrap>
         ) : (
           customformFields.map((field, index) => (
-            <div key={index}>
-              <h3>{field.title}</h3>
-              <p>{field.caption}</p>
-              <small>Due: {field.due?.toString()}</small>
-            </div>
+            <FormErrorWrap key={index}>
+              <input
+                  id={"tite"}
+                  {...register("target", {validate: (target) => {if(target?.length >= 100) return"Target must be less than " )}
+              />
+              <FormErrorParahraph errorObject={errors.target}></FormErrorParahraph>
+            </FormErrorWrap>
           ))
         )}
+        <button type="submit" disabled={isSubmitting}>
+          Submit
+        </button>
       </form>
     </PageTemplate>
   );
