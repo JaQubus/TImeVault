@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+                color: #333;
+            }
+
+            .container {
+                width: 80%;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: white;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            h2 {
+                color: #2c3e50;
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+
+            p {
+                font-size: 18px;
+                color: #555;
+            }
+
+            ul {
+                list-style-type: none;
+                padding: 0;
+            }
+
+            li {
+                font-size: 16px;
+                padding: 8px;
+                background-color: #ecf0f1;
+                margin-bottom: 6px;
+                border-radius: 4px;
+            }
+
+            li::before {
+                content: "→";
+                margin-right: 10px;
+                color: #2980b9;
+            }
+
+            li:nth-child(even) {
+                background-color: #bdc3c7;
+            }
+
+            /* Adding some space around the list */
+            ul {
+                padding-left: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <p>{{ message }}</p>
+            <h2>{{ content_heading }}</h2>
+            <ul>
+                {% for key, value in images.items() %}
+                <li>
+                    <h3>{{ key }}</h3>
+                    <img
+                        src="data:image/png;base64, {{ value }}"
+                        alt="Image {{ key }}"
+                    />
+                </li>
+                {% endfor %} {% for key, value in content.items() %}
+                <li>{{ key }} -> {{ value }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </body>
+</html>

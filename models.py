@@ -1,8 +1,9 @@
 from fastapi.datastructures import Default
+from pydantic.types import Json
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 import uuid
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column
-from sqlalchemy import String, DateTime, ForeignKey, JSON, ARRAY
+from sqlalchemy import String, DateTime, ForeignKey, JSON, Integer
 from pydantic import BaseModel, EmailStr
 import datetime
 from sqlalchemy_utils import UUIDType
@@ -62,6 +63,8 @@ class EmailRequestCreateSchema(BaseModel):
     receiver: EmailStr
     date_to_send: datetime.datetime
     message: str
+    images: Json
+    content: Json
 
 
 class EmailRequestCreate(Base):
@@ -73,16 +76,18 @@ class EmailRequestCreate(Base):
     receiver: Mapped[String] = mapped_column("receiver", String, nullable=False)
     date_to_send: Mapped[datetime.datetime] = mapped_column("date_to_send", DateTime, nullable=False)
     message: Mapped[String] = mapped_column("message", String, nullable=False)
-    images: Mapped[ARRAY] = mapped_column("images", ARRAY, nullable=False)
+    images: Mapped[JSON] = mapped_column("images", JSON, nullable=False)
     content: Mapped[JSON] = mapped_column("content", JSON, nullable=False)
 
-    def __init__(self, email_id, user_id, sender, receiver, date_to_send, message):
+    def __init__(self, email_id, user_id, sender, receiver, date_to_send, message, images, content):
         self.email_id = email_id
         self.user_id = user_id
         self.sender = sender
         self.receiver = receiver
         self.date_to_send = date_to_send
         self.message = message
+        self.images = images
+        self.content = content
 
     def dict(self):
         return {
@@ -91,4 +96,6 @@ class EmailRequestCreate(Base):
             "receiver": self.receiver,
             "date_to_send": self.date_to_send,
             "message": self.message,
+            "images": self.images,
+            "content": self.content,
         }

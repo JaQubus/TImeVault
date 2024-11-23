@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 import uuid
 from models import EmailRequestCreateSchema, EmailRequestCreate
 from sqlalchemy.exc import SQLAlchemyError
+from pprint import pprint
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -47,10 +48,10 @@ async def login(request: Request, db: AsyncSession = Depends(models.get_db)) -> 
             print(query)
 
             user_data = query.scalar()
+            if user_data is None:
+                return JSONResponse(content={"Error": "User not found"}, status_code=404)
             user_id = user_data.user_id
 
-        if user_data is None:
-            return JSONResponse(content={"Error": "User not found"}, status_code=404)
 
         # user_id = user_data["user_id"]
         # print("\n\n\n\n\n", user_id)
@@ -97,6 +98,7 @@ async def create_user(request: Request, db: AsyncSession = Depends(models.get_db
 
 @app.post("/create_message")
 async def create_message(request_data: EmailRequestCreateSchema, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
+    pprint(request_data)
     email_request_create = EmailRequestCreate(**request_data.dict())
     try:
         async with db:
