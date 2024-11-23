@@ -13,7 +13,12 @@ export default function MainContent() {
   const { username, userId, email } = useUserDataContext();
 
   const paragraphs = Array.from({ length: 4 }, (_, index) => (
-    <Paragraph key={index} setMessage={setMessage} submit={submit} />
+    <Paragraph
+      key={index}
+      setMessage={setMessage}
+      submit={submit}
+      setSubmit={setSubmit}
+    />
   ));
 
   const send = async () => {
@@ -41,4 +46,3 @@ export default function MainContent() {
     </div>
   );
 }
-
