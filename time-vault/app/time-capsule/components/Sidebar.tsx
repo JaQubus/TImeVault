@@ -18,7 +18,7 @@ export default function Sidebar() {
         <span>Goals</span>
     </a>
     <a className={styles.sidebar_item}>
-        <img src="question.png" alt="Icon" />
+        <img src="bx-question-mark.png" alt="Icon" />
         <span>Questions</span>
     </a>
     <a className={styles.sidebar_item}>
@@ -28,7 +28,7 @@ export default function Sidebar() {
 </div>
 <div className={styles.sidebar_footer}>
     <div className={styles.sidebar_footer_account}>
-        <img src="user-icon.png" alt="user-icon"></img>
+        <img src="bxs-user-rectangle.png" alt="user-icon"></img>
         <span>Username</span>
     </div>
     <button className={styles.sidebar_button}>Logout</button>
