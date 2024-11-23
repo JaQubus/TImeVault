@@ -8,29 +8,32 @@ export default function Sidebar() {
     useUserDataContext();
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.logo_container}>
-        <img src="logo.png" alt="Logo" />
-      </div>
 
-      <div className={styles.sidebar_items}>
-        <a className={styles.sidebar_item}>
-          <img src="bx-hourglass.png" alt="Icon" />
-          <span>Time Capsule</span>
+        <a href="/time-capsule">
+            <div className={styles.logo_container}>
+                <img src="logo.png" alt="Logo" />
+            </div>
         </a>
-        <a className={styles.sidebar_item}>
-          <img src="bx-calendar-star.png" alt="Icon" />
-          <span>Goals</span>
-        </a>
-        <a className={styles.sidebar_item}>
-          <img src="bx-question-mark.png" alt="Icon" />
-          <span>Questions</span>
-        </a>
-        <a className={styles.sidebar_item}>
-          <img src="bxs-photo-album.png" alt="Icon" />
-          <span>Photos</span>
-        </a>
-      </div>
-      <div className={styles.sidebar_footer}>
+
+<div className={styles.sidebar_items}>
+    <a className={styles.sidebar_item} href="/time-capsule">
+        <img src="bx-hourglass.png" alt="Icon" />
+        <span>Time Capsule</span>
+    </a>
+    <a className={styles.sidebar_item}>
+        <img src="bx-calendar-star.png" alt="Icon" />
+        <span>Goals</span>
+    </a>
+    <a className={styles.sidebar_item}>
+        <img src="bx-question-mark.png" alt="Icon" />
+        <span>Questions</span>
+    </a>
+    <a className={styles.sidebar_item} href="/photos-timeline">
+        <img src="bxs-photo-album.png" alt="Icon" />
+        <span>Photos timeline</span>
+    </a>
+</div>
+    <div className={styles.sidebar_footer}>
         <div className={styles.sidebar_footer_account}>
           <img src="bxs-user-rectangle.png" alt="user-icon"></img>
           <span>{username}</span>
@@ -46,8 +49,8 @@ export default function Sidebar() {
         >
           Logout
         </button>
-      </div>
-    </aside>
-  );
+</div>
+</aside>
+);
 }
 

@@ -1,8 +1,10 @@
 "use client";
+
 import React, { useState } from "react";
 import styles from "../styles.module.scss";
 import Paragraph from "./Paragraph";
 import MainForm from "./MainForm";
+
 import { useUserDataContext } from "@/app/userContextProvider";
 import OLF from "@/app/OneLastFetch";
 import ApiLinks from "@/app/apiLinks";
@@ -46,3 +48,4 @@ export default function MainContent() {
     </div>
   );
 }
+

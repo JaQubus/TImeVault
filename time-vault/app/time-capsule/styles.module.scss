@@ -1,7 +1,16 @@
 .container {
-    background: #2C3531;
+    background: rgb(44,53,49);
+    background: linear-gradient(90deg, rgba(44,53,49,1) 0%, rgba(17,100,102,1) 100%);   
     display: flex;
     color: white;
+
+    input {
+        background: rgba(209, 232, 226, 0.15);
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        color: white;
+    }
     .sidebar {
         width: 24rem;
         height: 100vh;
@@ -113,9 +122,22 @@
                     cursor: pointer;
                 }
             }
+                  
+            }
+            .add_paragraph_button {
+                border: white 1px dashed;
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+            .add_paragraph_button:hover {
+                background: rgba(209, 232, 226, 0.1);
+                transition: ease 0.3s;
+            }
             .textarea {
                 width: 100%;
-                background: #2C3531;
+                background: rgba(209, 232, 226, 0.15);
                 height: 200px;
                 padding: 10px;
                 font-size: 16px;
@@ -125,16 +147,69 @@
             }
             .remove_button {
                 margin-top: 10px;
-                background-color: #ff4d4d;
                 color: white;
                 border: none;
                 padding: 10px;
                 border-radius: 5px;
                 cursor: pointer;
             }
+            .goal {
+                display: flex;
+                background: rgba(209, 232, 226, 0.15);
+                padding: 3rem;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                gap: 10px;
+                width: 17vw;
+                border-radius: 5px;
+            }
+            .goals_list {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2rem;
+                margin-top: 10px;
+            }
+            .paragraph {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                padding: 10px;
+                border-radius: 5px;
+            }
+            .image_preview_container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 10px;
+            }
             
+            .image_preview {
+                width: 100px;
+                height: 100px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+            
+            .image_preview img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
             .remove_button:hover {
-                background-color: #ff1a1a;
+                background: rgba(136, 0, 0, 0.4);
+                transition: ease 0.3s;
             }
         }
         .main_form {
@@ -150,9 +225,9 @@
             }
             .main_input {
                 display: flex;
-                background: #2C3531;
                 flex-direction: column;
                 border: 2px solid #ffffff;
+                background : rgba(209, 232, 226, 0.15);
                 width: 25vw;
                 border-radius: 10px;
                 gap: 10px;
@@ -170,7 +245,7 @@
 
         }
     }
-}
+
 
 .main_add_paragraph {
     position: relative;
@@ -178,7 +253,7 @@
 
 .dropdown_menu {
     position: fixed;
-    background-color: rgb(37, 48, 53);
+    background-color: rgba(37, 48, 53, 0.8);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     width: 10vw;
