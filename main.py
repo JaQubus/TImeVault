@@ -102,7 +102,6 @@ async def create_user(request: Request, db: AsyncSession = Depends(models.get_db
         return JSONResponse(content={"Error": f"Unexpected error {e}"}, status_code=500)
 
 
-@app.get("/send_email/{email_data}")
 async def send_email(email_data: str, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
     try:
         sender_email = "electrovision.auth@gmail.com"
