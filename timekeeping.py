@@ -9,8 +9,6 @@ from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from jinja2 import Template, FileSystemLoader, Environment
 from email.mime.multipart import MIMEMultipart
-
-task = None
 import base64
 
 async def send_email(email_data: dict) -> JSONResponse:
@@ -33,14 +31,14 @@ async def send_email(email_data: dict) -> JSONResponse:
         html_message['Subject'] = subject
         html_message['From'] = sender_email
         html_message['To'] = recipient_email
-        
+
         html_mime = MIMEText(html_body, 'html')
         html_message.attach(html_mime)
 
         # html_message.attach(message_image)
 
         # print(email_data['images']["image_key"])
-        
+
         for i, image_data in enumerate(email_data['images']):
             extension = image_data['format']
             base_64_image = image_data['data']
@@ -61,7 +59,7 @@ async def send_email(email_data: dict) -> JSONResponse:
 
     except SMTPException as e:
         return JSONResponse(content={"error": f"Unexpected SMTP error: {e}"}, status_code=418)
-        
+
     except Exception as e:
         print(e)
         return JSONResponse(content={"error": f"Unexpected error: {e}"}, status_code=418)
