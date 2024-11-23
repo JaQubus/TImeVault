@@ -34,22 +34,25 @@ export default function Paragraph({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  if (submit) {
-    if (textareaRef.current && textareaRef.current.value !== "") {
-      setMessage((prev) =>
-        prev
-          ? [...prev, textareaRef.current.value]
-          : [textareaRef.current.value],
-      );
+  useEffect(() => {
+    if (submit) {
+      if (textareaRef.current && textareaRef.current.value !== "") {
+        setMessage((prev) =>
+          prev
+            ? [...prev, textareaRef.current.value]
+            : [textareaRef.current.value],
+        );
+      }
+      if (images.length > 0) {
+        setFinalImages((prev) => (prev ? [...prev, ...images] : images));
+      }
+      if (goals.length > 0) {
+        setFinalGoals((prev) => (prev ? [...prev, ...goals] : goals));
+      }
+      setSubmit(false);
     }
-    if (images.length > 0) {
-      setFinalImages((prev) => (prev ? [...prev, ...images] : images));
-    }
-    if (goals.length > 0) {
-      setFinalGoals((prev) => (prev ? [...prev, ...goals] : goals));
-    }
-    setSubmit(false);
-  }
+  }, [submit]);
+
   const handleButtonClick = (event: React.MouseEvent) => {
     setCursorPosition({ x: event.clientX, y: event.clientY });
     setShowDropdown(!showDropdown);
