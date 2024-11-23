@@ -9,22 +9,22 @@ export default function Sidebar() {
     </div>
 
 <div className={styles.sidebar_items}>
-    <div className={styles.sidebar_item}>
-        <img src="icon.png" alt="Icon" />
+    <a className={styles.sidebar_item}>
+        <img src="bx-hourglass.png" alt="Icon" />
         <span>Time Capsule</span>
-    </div>
-    <div className={styles.sidebar_item}>
-        <img src="icon.png" alt="Icon" />
+    </a>
+    <a className={styles.sidebar_item}>
+        <img src="bx-calendar-star.png" alt="Icon" />
         <span>Goals</span>
-    </div>
-    <div className={styles.sidebar_item}>
-        <img src="icon.png" alt="Icon" />
+    </a>
+    <a className={styles.sidebar_item}>
+        <img src="question.png" alt="Icon" />
         <span>Questions</span>
-    </div>
-    <div className={styles.sidebar_item}>
-        <img src="icon.png" alt="Icon" />
+    </a>
+    <a className={styles.sidebar_item}>
+        <img src="bxs-photo-album.png" alt="Icon" />
         <span>Photos</span>
-    </div>
+    </a>
 </div>
 <div className={styles.sidebar_footer}>
     <div className={styles.sidebar_footer_account}>
