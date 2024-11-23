@@ -1,4 +1,3 @@
-from pydantic.types import Json
 from sqlalchemy.ext.asyncio.session import async_sessionmaker
 from starlette.responses import JSONResponse
 import uvicorn
@@ -7,14 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import models
 from sqlalchemy import select, and_
 import hashlib
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from smtplib import SMTP
 from timekeeping import start_task
-from email.message import EmailMessage
 from contextlib import asynccontextmanager
-from email.mime.text import MIMEText
 import uuid
 from models import EmailRequestCreateSchema, EmailRequestCreate
 from sqlalchemy.exc import SQLAlchemyError
@@ -102,37 +95,6 @@ async def create_user(request: Request, db: AsyncSession = Depends(models.get_db
         return JSONResponse(content={"Error": f"Unexpected error {e}"}, status_code=500)
 
 
-async def send_email(email_data: str, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
-    try:
-        sender_email = "electrovision.auth@gmail.com"
-        sender_password = "ddsm atmm sfjf mlhl"
-        recipient_email = "lekstomek602@gmail.com"
-        subject = "Hello from Python"
-        body = """
-        <html>
-          <body>
-            <p>This is an <b>HTML</b> email sent from Python using the Gmail SMTP server.</p>
-          </body>
-        </html>
-        """
-        html_message = MIMEText(body, 'html')
-        html_message['Subject'] = subject
-        html_message['From'] = sender_email
-        html_message['To'] = recipient_email
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
-                server.starttls()
-                server.login(sender_email, sender_password)
-                server.sendmail(sender_email, recipient_email, html_message.as_string())
-                print("Email sent successfully!")
-
-        return JSONResponse({"success": True, "message": "Email sent to"})
-
-    except smtplib.SMTPException as e:
-        return JSONResponse(content={"error": f"Unexpected error: {e}"}, status_code=418)
-
-    except Exception as e:
-        return JSONResponse(content={"error": f"Unexpected error: {e}"}, status_code=418)
-
 @app.post("/create_message")
 async def create_message(request_data: EmailRequestCreateSchema, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
     email_request_create = EmailRequestCreate(**request_data.dict())
@@ -146,7 +108,6 @@ async def create_message(request_data: EmailRequestCreateSchema, db: AsyncSessio
     except Exception as e:
         await db.rollback()  # Roll back in case of an error
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {e}")
-
 
 async def hash_password(password):
     password_bytes = password.encode('utf-8')
