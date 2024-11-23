@@ -15,7 +15,6 @@ import styles from "./styles.module.scss";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
 
-
 type FormProps = {
   username: string | null;
   email: string | null;
@@ -34,6 +33,7 @@ export default function gettingStarted() {
   const { setEmail, setUsername, setUserId } = useUserDataContext();
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
+    console.log("submit");
     try {
       const response = await OLF.post(ApiLinks.register, {
         username: data.username,
@@ -52,41 +52,47 @@ export default function gettingStarted() {
   };
   return (
     <PageTemplate>
-
       <div className={styles.main}>
-        <Navbar className = {styles.navbar} />
+        <Navbar className={styles.navbar} />
 
         <div>
-          <h1>Back to <span className={styles.yellow_text}>your</span> future.</h1>
-          <p className={styles.subheading}>Make a time capsule and surprise yourself.</p>
+          <h1>
+            Back to <span className={styles.yellow_text}>your</span> future.
+          </h1>
+          <p className={styles.subheading}>
+            Make a time capsule and surprise yourself.
+          </p>
         </div>
 
-        <div className={styles.carousel}>
-
-        </div>
+        <div className={styles.carousel}></div>
 
         <div className="">
-          <p className={styles.subheading}>Join today and <span className={styles.yellow_text}>write an amazing story</span> </p>
+          <p className={styles.subheading}>
+            Join today and{" "}
+            <span className={styles.yellow_text}>write an amazing story</span>{" "}
+          </p>
           <form className={styles.login_form} onSubmit={handleSubmit(onSubmit)}>
             <FormErrorWrap>
-          <input
-            id="username"
-            {...register("username", {
-              validate: (username) => {
-                if (!username || username.length <= 4)
-                  return "Username must be at least 4 characters";
-              },
-              required: {
-                value: true,
-                message: "Username is required to continue",
-              },
-            })}
-            type="text"
-            placeholder="Username"
-            name="username"
-          />
-          <FormErrorParahraph errorObject={errors.email}></FormErrorParahraph>
-        </FormErrorWrap>
+              <input
+                id="username"
+                {...register("username", {
+                  validate: (username) => {
+                    if (!username || username.length < 4)
+                      return "Username must be at least 4 characters";
+                  },
+                  required: {
+                    value: true,
+                    message: "Username is required to continue",
+                  },
+                })}
+                type="text"
+                placeholder="Username"
+                name="username"
+              />
+              <FormErrorParahraph
+                errorObject={errors.username}
+              ></FormErrorParahraph>
+            </FormErrorWrap>
             <FormErrorWrap>
               <input
                 id="email"
@@ -105,7 +111,9 @@ export default function gettingStarted() {
                 placeholder="Email"
                 name="email"
               />
-              <FormErrorParahraph errorObject={errors.email}></FormErrorParahraph>
+              <FormErrorParahraph
+                errorObject={errors.email}
+              ></FormErrorParahraph>
             </FormErrorWrap>
             <FormErrorWrap>
               <input
@@ -135,7 +143,6 @@ export default function gettingStarted() {
           </form>
         </div>
         <div className={styles.bg_gradient}></div>
-        
       </div>
       <Footer />
     </PageTemplate>
