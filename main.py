@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 import uuid
 from models import EmailRequestCreateSchema, EmailRequestCreate
 from sqlalchemy.exc import SQLAlchemyError
+from starlette.middleware.cors import CORSMiddleware
 from pprint import pprint
 from timekeeping import task
 import asyncio
@@ -31,6 +32,14 @@ app = FastAPI(lifespan=lifespan)
 
 Session = async_sessionmaker(bind=models.engine)
 session = Session()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/login")
 async def login(request: Request, db: AsyncSession = Depends(models.get_db)) -> JSONResponse:
