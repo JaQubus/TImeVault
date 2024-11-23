@@ -11,6 +11,8 @@ from jinja2 import Template, FileSystemLoader, Environment
 from email.mime.multipart import MIMEMultipart
 import base64
 
+task = None
+
 async def send_email(email_data: dict) -> JSONResponse:
     try:
         sender_email = "electrovision.auth@gmail.com"
