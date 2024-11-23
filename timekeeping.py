@@ -22,7 +22,6 @@ async def send_email(email_data: dict) -> JSONResponse:
         if 'message' not in email_data:
             return JSONResponse(content={"error": "Unexpected message error"}, status_code=418)
 
-        print("EMAIL DATA: ", email_data)
         templateLoader = FileSystemLoader(searchpath="./")
         templateEnv = Environment(loader=templateLoader)
         TEMPLATE_FILE = "email_response.html"
@@ -42,13 +41,16 @@ async def send_email(email_data: dict) -> JSONResponse:
 
         # print(email_data['images']["image_key"])
         
-        base_64_image = email_data['images']["image_key"]
-        image_data = base64.b64decode(base_64_image)
+        for i, image_data in enumerate(email_data['images']):
+            extension = image_data['format']
+            base_64_image = image_data['data']
+            # base_64_image = email_data['images']["image_key"]
+            image_data = base64.b64decode(base_64_image)
 
-        message_image = MIMEImage(image_data, 'png')
-        message_image.add_header('Content-Disposition', 'attachment', filename='image.png')
+            message_image = MIMEImage(image_data, extension)
+            message_image.add_header('Content-Disposition', 'attachment', filename=f'image{i}.png')
 
-        html_message.attach(message_image)
+            html_message.attach(message_image)
 
         smtp_client = SMTP(hostname='smtp.gmail.com', port=465, use_tls=True)
         await smtp_client.connect()

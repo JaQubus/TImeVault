@@ -59,22 +59,11 @@
         </style>
     </head>
     <body>
+        <h1>Your message from the past</h1>
         <div class="container">
             <p>{{ message }}</p>
-            <h2>{{ content_heading }}</h2>
-            <ul>
-                {% for key, value in images.items() %}
-                <li>
-                    <h3>{{ key }}</h3>
-                    <!-- <img
-                        src="data:image/png;base64, {{ value }}"
-                        alt="Image {{ key }}"
-                    /> -->
-                </li>
-                {% endfor %} {% for key, value in content.items() %}
-                <li>{{ key }} -> {{ value }}</li>
-                {% endfor %}
-            </ul>
+            <!-- <h2>{{ content_heading }}</h2> -->
+            
         </div>
     </body>
 </html>
