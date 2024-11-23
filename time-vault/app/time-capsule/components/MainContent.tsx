@@ -5,25 +5,47 @@ import styles from "../styles.module.scss";
 import Paragraph from "./Paragraph";
 import MainForm from "./MainForm";
 
+import { useUserDataContext } from "@/app/userContextProvider";
+import OLF from "@/app/OneLastFetch";
+import ApiLinks from "@/app/apiLinks";
 export default function MainContent() {
-    const [paragraphs, setParagraphs] = useState<number[]>([1]);
+  const [date, setDate] = useState<Date | null>(null);
+  const [message, setMessage] = useState<string[] | null>(null);
+  const [submit, setSubmit] = useState<boolean>(false);
+  const { username, userId, email } = useUserDataContext();
 
-    const addParagraph = () => {
-        setParagraphs([...paragraphs, paragraphs.length + 1]);
-    };
+  const paragraphs = Array.from({ length: 4 }, (_, index) => (
+    <Paragraph
+      key={index}
+      setMessage={setMessage}
+      submit={submit}
+      setSubmit={setSubmit}
+    />
+  ));
 
-    const removeParagraph = (id: number) => {
-        setParagraphs(paragraphs.filter(paragraphId => paragraphId !== id));
-    };
+  const send = async () => {
+    const response = await OLF.post(ApiLinks.sendCapsule, {
+      user_id: userId,
+      email_sender: "",
+      reciever: email,
+      date_to_send: date,
+      message: message,
+      images: "",
+      content: "",
+    });
+    console.log(response);
+  };
 
-    return (
-        <div className={styles.main_content}>
-            <p>Dear username...</p>
-            {paragraphs.map((id) => (
-                <Paragraph key={id} id={id} removeParagraph={removeParagraph} />
-            ))}
-            <button onClick={addParagraph} className={styles.add_paragraph_button}>+</button>
-            <MainForm />
-        </div>
-    );
+  if (submit && date && message) {
+    send();
+  }
+
+  return (
+    <div className={styles.main_content}>
+      <p>Dear {username}...</p>
+      {paragraphs}
+      <MainForm setDate={setDate} setSubmit={setSubmit} />
+    </div>
+  );
 }
+

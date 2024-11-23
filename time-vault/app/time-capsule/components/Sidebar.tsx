@@ -1,9 +1,14 @@
+"use client";
 import React from "react";
 import styles from "../styles.module.scss";
+import { useUserDataContext } from "@/app/userContextProvider";
 
 export default function Sidebar() {
+  const { username, setEmail, setUserId, setUsername, setCanContinue } =
+    useUserDataContext();
   return (
     <aside className={styles.sidebar}>
+
         <a href="/time-capsule">
             <div className={styles.logo_container}>
                 <img src="logo.png" alt="Logo" />
@@ -28,13 +33,24 @@ export default function Sidebar() {
         <span>Photos timeline</span>
     </a>
 </div>
-<div className={styles.sidebar_footer}>
-    <div className={styles.sidebar_footer_account}>
-        <img src="bxs-user-rectangle.png" alt="user-icon"></img>
-        <span>Username</span>
-    </div>
-    <button className={styles.sidebar_button}>Logout</button>
+    <div className={styles.sidebar_footer}>
+        <div className={styles.sidebar_footer_account}>
+          <img src="bxs-user-rectangle.png" alt="user-icon"></img>
+          <span>{username}</span>
+        </div>
+        <button
+          className={styles.sidebar_button}
+          onClick={() => {
+            setUserId(null);
+            setCanContinue(false);
+            setUsername(null);
+            setEmail(null);
+          }}
+        >
+          Logout
+        </button>
 </div>
 </aside>
 );
 }
+

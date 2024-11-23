@@ -1,8 +1,10 @@
-const host = "http://localhost:8080";
+const host = "https://timevault-xokm.onrender.com";
 
 const ApiLinks = {
   snedForm: host + "/send-form",
-  sendEmail: host + "/send-email",
+  register: host + "/login/register",
+  login: host + "/login",
+  sendCapsule: host + "/send_message",
 } as const;
 
 export default ApiLinks;

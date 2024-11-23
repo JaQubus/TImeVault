@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, SetStateAction, useState } from "react";
+import React, { ReactNode, SetStateAction, useContext, useState } from "react";
 import { AppUser } from "@/app/types";
 import { createContext } from "react";
 
@@ -43,4 +43,12 @@ export default function UserDataContextProvider({
       {children}
     </UserContext.Provider>
   );
+}
+export function useUserDataContext() {
+  const context = useContext(UserContext);
+  if (!context) {
+    console.error("no context");
+    throw new Error("user context shall be not null");
+  }
+  return context;
 }

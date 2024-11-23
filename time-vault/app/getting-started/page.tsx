@@ -8,11 +8,16 @@ import FormErrorWrap from "../templates/formErrorWrap";
 import Regex from "../regex";
 import FormErrorParahraph from "../templates/formErrorParagraph";
 import { navigate } from "../actions/navigate";
+
+import { useUserDataContext } from "../userContextProvider";
+
 import styles from "./styles.module.scss";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
 
+
 type FormProps = {
+  username: string | null;
   email: string | null;
   password: string | null;
 };
@@ -26,11 +31,20 @@ export default function gettingStarted() {
     setError,
   } = useForm<FormProps>();
 
+  const { setEmail, setUsername, setUserId } = useUserDataContext();
+
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
     try {
-      navigate("form");
-      const response = await OLF.post(ApiLinks.sendEmail, data);
-      //tu winno byc ale raziena backendu ni ma      navigate("form");
+      const response = await OLF.post(ApiLinks.register, {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      });
+
+      setUserId(response["user_id"]);
+      setUsername(data.username);
+      setEmail(data.email);
+      navigate("time-capsule");
       console.log("Form submitted successfully", response);
     } catch (error) {
       console.error("Error submitting form", error);
@@ -38,6 +52,7 @@ export default function gettingStarted() {
   };
   return (
     <PageTemplate>
+
       <div className={styles.main}>
         <Navbar className = {styles.navbar} />
 
@@ -53,6 +68,25 @@ export default function gettingStarted() {
         <div className="">
           <p className={styles.subheading}>Join today and <span className={styles.yellow_text}>write an amazing story</span> </p>
           <form className={styles.login_form} onSubmit={handleSubmit(onSubmit)}>
+            <FormErrorWrap>
+          <input
+            id="username"
+            {...register("username", {
+              validate: (username) => {
+                if (!username || username.length <= 4)
+                  return "Username must be at least 4 characters";
+              },
+              required: {
+                value: true,
+                message: "Username is required to continue",
+              },
+            })}
+            type="text"
+            placeholder="Username"
+            name="username"
+          />
+          <FormErrorParahraph errorObject={errors.email}></FormErrorParahraph>
+        </FormErrorWrap>
             <FormErrorWrap>
               <input
                 id="email"
