@@ -124,7 +124,6 @@ export default function Paragraph({
             placeholder="Write your message here..."
             ref={textareaRef}
           ></textarea>
-          <button className={styles.remove_button}>Remove</button>
         </div>
       )}
       {paragraphType === "Question" && (
@@ -139,7 +138,6 @@ export default function Paragraph({
             className={styles.input}
             placeholder="Enter your answer here..."
           />
-          <button className={styles.remove_button}>Remove</button>
         </div>
       )}
       {paragraphType === "Goals" && (
@@ -175,12 +173,6 @@ export default function Paragraph({
           <button onClick={addGoal} className={styles.add_goal_button}>
             Add Goal
           </button>
-          <button
-            onClick={handleRemoveParagraph}
-            className={styles.remove_button}
-          >
-            Remove
-          </button>
         </div>
       )}
       {paragraphType === "Image" && (
@@ -199,12 +191,6 @@ export default function Paragraph({
               </div>
             ))}
           </div>
-          <button
-            onClick={handleRemoveParagraph}
-            className={styles.remove_button}
-          >
-            Remove
-          </button>
         </div>
       )}
       {!paragraphType && (
