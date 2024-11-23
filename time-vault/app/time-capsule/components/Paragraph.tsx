@@ -1,9 +1,19 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, SetStateAction } from "react";
 import styles from "../styles.module.scss";
 
-export default function Paragraph() {
+type ParagraphProps = {
+  setMessage: React.Dispatch<SetStateAction<string[] | null>>;
+  submit: boolean;
+  setSubmit: React.Dispatch<SetStateAction<boolean>>;
+};
+
+export default function Paragraph({
+  setMessage,
+  submit = false,
+  setSubmit,
+}: ParagraphProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [paragraphType, setParagraphType] = useState<string | null>(null);
@@ -49,11 +59,14 @@ export default function Paragraph() {
     };
   }, []);
 
-  const btnclick = () => {
+  if (submit) {
     if (textAreaRef.current) {
-      console.log(textAreaRef.current.value);
+      const taval = textAreaRef.current.value;
+      console.log(taval);
+      setMessage((p) => [...(p || []), taval]);
     }
-  };
+    setSubmit(false);
+  }
 
   return (
     <div className={styles.main_add_paragraph}>
@@ -69,9 +82,6 @@ export default function Paragraph() {
             className={styles.remove_button}
           >
             Remove
-          </button>
-          <button onClick={btnclick} className={styles.remove_button}>
-            check text
           </button>
         </div>
       ) : (

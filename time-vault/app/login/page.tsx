@@ -77,7 +77,7 @@ export default function Login() {
           />
           <FormErrorParahraph errorObject={errors.email}></FormErrorParahraph>
         </FormErrorWrap>
-        <button type="submit" disabled={isSubmitting}>
+        <button type="submit" onClick={() => console.log("click")}>
           Login!
         </button>
       </form>

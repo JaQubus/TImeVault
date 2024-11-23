@@ -8,6 +8,7 @@ import FormErrorWrap from "../templates/formErrorWrap";
 import Regex from "../regex";
 import FormErrorParahraph from "../templates/formErrorParagraph";
 import { navigate } from "../actions/navigate";
+import { useUserDataContext } from "../userContextProvider";
 
 type FormProps = {
   username: string | null;
@@ -24,6 +25,8 @@ export default function gettingStarted() {
     setError,
   } = useForm<FormProps>();
 
+  const { setEmail, setUsername, setUserId } = useUserDataContext();
+
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
     try {
       const response = await OLF.post(ApiLinks.register, {
@@ -31,7 +34,11 @@ export default function gettingStarted() {
         email: data.email,
         password: data.password,
       });
-      navigate("form");
+
+      setUserId(response["user_id"]);
+      setUsername(data.username);
+      setEmail(data.email);
+      navigate("time-capsule");
       console.log("Form submitted successfully", response);
     } catch (error) {
       console.error("Error submitting form", error);
