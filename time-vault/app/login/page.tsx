@@ -1,21 +1,21 @@
 "use client";
 
 import { SubmitHandler, useForm } from "react-hook-form";
-import PageTemplate from "../templates/pageTemplate";
 import OLF from "../OneLastFetch";
 import ApiLinks from "../apiLinks";
+import { navigate } from "../actions/navigate";
+import { useUserDataContext } from "../userContextProvider";
+import PageTemplate from "../templates/pageTemplate";
 import FormErrorWrap from "../templates/formErrorWrap";
 import Regex from "../regex";
 import FormErrorParahraph from "../templates/formErrorParagraph";
-import { navigate } from "../actions/navigate";
 
-type FormProps = {
-  username: string | null;
-  email: string | null;
-  password: string | null;
-};
+export default function Login() {
+  type FormProps = {
+    email: string | null;
+    password: string | null;
+  };
 
-export default function gettingStarted() {
   const {
     register,
     handleSubmit,
@@ -24,42 +24,25 @@ export default function gettingStarted() {
     setError,
   } = useForm<FormProps>();
 
+  const { email, setEmail, userId, setUserId } = useUserDataContext();
+
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
     try {
-      const response = await OLF.post(ApiLinks.register, {
-        username: data.username,
-        email: data.email,
-        password: data.password,
-      });
-      navigate("form");
+      const response = await OLF.post(ApiLinks.login, data);
+      console.log(response);
+      setUserId(response["user_id"]);
+      setEmail(response["email"]);
+      navigate("/time-capsule");
+      //tu winno byc ale raziena backendu ni ma      navigate("form");
       console.log("Form submitted successfully", response);
     } catch (error) {
       console.error("Error submitting form", error);
     }
   };
+
   return (
     <PageTemplate>
-      Get Started With Time Vault
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormErrorWrap>
-          <input
-            id="username"
-            {...register("username", {
-              validate: (username) => {
-                if (!username || username.length <= 4)
-                  return "Username must be at least 4 characters";
-              },
-              required: {
-                value: true,
-                message: "Username is required to continue",
-              },
-            })}
-            type="text"
-            placeholder="Username"
-            name="username"
-          />
-          <FormErrorParahraph errorObject={errors.email}></FormErrorParahraph>
-        </FormErrorWrap>
         <FormErrorWrap>
           <input
             id="email"
@@ -71,12 +54,9 @@ export default function gettingStarted() {
               },
               required: {
                 value: true,
-                message: "Email is required to continue",
+                message: "email is required",
               },
             })}
-            type="email"
-            placeholder="Email"
-            name="email"
           />
           <FormErrorParahraph errorObject={errors.email}></FormErrorParahraph>
         </FormErrorWrap>
@@ -85,25 +65,20 @@ export default function gettingStarted() {
             id="password"
             {...register("password", {
               validate: (password) => {
-                if (!password || !Regex.password.test(password))
-                  return "Password must be At least 8 char long";
+                if (!Regex.password.test(password ?? ""))
+                  return "password must be in correct format";
                 return true;
               },
               required: {
                 value: true,
-                message: "Password is required",
+                message: "password is required",
               },
             })}
-            type="password"
-            placeholder="Password"
-            name="password"
           />
-          <FormErrorParahraph
-            errorObject={errors.password}
-          ></FormErrorParahraph>
+          <FormErrorParahraph errorObject={errors.email}></FormErrorParahraph>
         </FormErrorWrap>
         <button type="submit" disabled={isSubmitting}>
-          Register!
+          Login!
         </button>
       </form>
     </PageTemplate>
