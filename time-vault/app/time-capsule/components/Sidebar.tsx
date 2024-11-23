@@ -11,7 +11,7 @@ export default function Sidebar() {
         </a>
 
 <div className={styles.sidebar_items}>
-    <a className={styles.sidebar_item}>
+    <a className={styles.sidebar_item} href="/time-capsule">
         <img src="bx-hourglass.png" alt="Icon" />
         <span>Time Capsule</span>
     </a>
@@ -23,9 +23,9 @@ export default function Sidebar() {
         <img src="bx-question-mark.png" alt="Icon" />
         <span>Questions</span>
     </a>
-    <a className={styles.sidebar_item}>
+    <a className={styles.sidebar_item} href="/photos-timeline">
         <img src="bxs-photo-album.png" alt="Icon" />
-        <span>Photos</span>
+        <span>Photos timeline</span>
     </a>
 </div>
 <div className={styles.sidebar_footer}>
