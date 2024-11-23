@@ -1,69 +1,111 @@
-<html>
-    <head>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                line-height: 1.6;
-                background-color: #f4f4f4;
-                margin: 0;
-                padding: 0;
-                color: #333;
-            }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Capsule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
 
-            .container {
-                width: 80%;
-                margin: 0 auto;
-                padding: 20px;
-                background-color: white;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
 
-            h2 {
-                color: #2c3e50;
-                font-size: 24px;
-                margin-bottom: 10px;
-            }
+        h2 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
 
-            p {
-                font-size: 18px;
-                color: #555;
-            }
+        p {
+            font-size: 18px;
+            color: #555;
+        }
 
-            ul {
-                list-style-type: none;
-                padding: 0;
-            }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
 
-            li {
-                font-size: 16px;
-                padding: 8px;
-                background-color: #ecf0f1;
-                margin-bottom: 6px;
-                border-radius: 4px;
-            }
+        li {
+            font-size: 16px;
+            padding: 8px;
+            background-color: #ecf0f1;
+            margin-bottom: 6px;
+            border-radius: 4px;
+        }
 
-            li::before {
-                content: "→";
-                margin-right: 10px;
-                color: #2980b9;
-            }
+        li::before {
+            content: "→";
+            margin-right: 10px;
+            color: #2980b9;
+        }
 
-            li:nth-child(even) {
-                background-color: #bdc3c7;
-            }
+        li:nth-child(even) {
+            background-color: #bdc3c7;
+        }
 
-            /* Adding some space around the list */
-            ul {
-                padding-left: 20px;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>Your message from the past</h1>
-        <div class="container"></div>
+        .message {
+            margin-bottom: 20px;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Your Time Capsule</h2>
+        <p>Dear {{ receiver }},</p>
+        <p>Here is the content of your time capsule:</p>
+
+        <div class="message">
+            <h3>Message</h3>
             <p>{{ message }}</p>
-            <!-- <h2>{{ content_heading }}</h2> -->
-
         </div>
-    </body>
+
+        <div class="image-container">
+            <h3>Images</h3>
+            {% for image in images %}
+                <img src="{{ image }}" alt="Time Capsule Image">
+            {% endfor %}
+        </div>
+
+        <ul>
+            {% for key, value in content.items() %}
+                <li><strong>{{ key }}:</strong> {{ value }}</li>
+            {% endfor %}
+        </ul>
+
+        <p>Thank you for using our service!</p>
+        <p class="footer">© 2023 Time Capsule Service. All rights reserved.</p>
+    </div>
+</body>
 </html>
