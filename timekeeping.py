@@ -9,6 +9,7 @@ from email.mime.text import MIMEText
 from jinja2 import Template, FileSystemLoader, Environment
 from email.mime.multipart import MIMEMultipart
 
+task = None
 
 async def send_email(email_data: dict) -> JSONResponse:
     try:
@@ -65,4 +66,5 @@ async def check_times() -> None:
 
             await asyncio.sleep(5) # TODO: Make this every minute
 def start_task() -> None:
-    asyncio.create_task(check_times())
+    global task
+    task = asyncio.create_task(check_times())
