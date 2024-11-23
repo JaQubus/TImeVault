@@ -6,10 +6,12 @@ import models
 from starlette.responses import JSONResponse
 from aiosmtplib import SMTP, SMTPException
 from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
 from jinja2 import Template, FileSystemLoader, Environment
 from email.mime.multipart import MIMEMultipart
 
 task = None
+import base64
 
 async def send_email(email_data: dict) -> JSONResponse:
     try:
@@ -18,7 +20,7 @@ async def send_email(email_data: dict) -> JSONResponse:
         recipient_email = email_data['receiver']
         subject = "The time is right -> TimeVault!"
         if 'message' not in email_data:
-            return JSONResponse(content={"error": "Unexpected error"}, status_code=418)
+            return JSONResponse(content={"error": "Unexpected message error"}, status_code=418)
 
         print("EMAIL DATA: ", email_data)
         templateLoader = FileSystemLoader(searchpath="./")
@@ -26,12 +28,28 @@ async def send_email(email_data: dict) -> JSONResponse:
         TEMPLATE_FILE = "email_response.html"
         template = templateEnv.get_template(TEMPLATE_FILE)
 
-        body = template.render(email_data)
+        html_body = template.render(email_data)
+
         html_message = MIMEMultipart('mixed')
-        html_message = MIMEText(body, 'html')
         html_message['Subject'] = subject
         html_message['From'] = sender_email
         html_message['To'] = recipient_email
+        
+        html_mime = MIMEText(html_body, 'html')
+        html_message.attach(html_mime)
+
+        # html_message.attach(message_image)
+
+        # print(email_data['images']["image_key"])
+        
+        base_64_image = email_data['images']["image_key"]
+        image_data = base64.b64decode(base_64_image)
+
+        message_image = MIMEImage(image_data, 'png')
+        message_image.add_header('Content-Disposition', 'attachment', filename='image.png')
+
+        html_message.attach(message_image)
+
         smtp_client = SMTP(hostname='smtp.gmail.com', port=465, use_tls=True)
         await smtp_client.connect()
         # await smtp_client.starttls()
@@ -40,9 +58,10 @@ async def send_email(email_data: dict) -> JSONResponse:
         return JSONResponse({"success": True, "message": "Email sent to"}, status_code=200)
 
     except SMTPException as e:
-        return JSONResponse(content={"error": f"Unexpected error: {e}"}, status_code=418)
-
+        return JSONResponse(content={"error": f"Unexpected SMTP error: {e}"}, status_code=418)
+        
     except Exception as e:
+        print(e)
         return JSONResponse(content={"error": f"Unexpected error: {e}"}, status_code=418)
 
 
