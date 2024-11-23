@@ -58,7 +58,7 @@ async def login(request: Request, db: AsyncSession = Depends(models.get_db)) -> 
         # user_id = user_data["user_id"]
         # print("\n\n\n\n\n", user_id)
 
-        return JSONResponse(content={"Success": "User logged in successfully", "user_id": user_id}, status_code=200)
+        return JSONResponse(content={"Success": "User logged in successfully", "user_id": user_id, "email": user_data.email}, status_code=200)
 
     except Exception as e:
         print(e)
