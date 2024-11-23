@@ -14,7 +14,7 @@ type ContextType = AppUser & {
   setEmail: React.Dispatch<SetStateAction<AppUser["email"]>>;
   setCanContinue: React.Dispatch<SetStateAction<AppUser["canContinue"]>>;
   setCustomFormFields: React.Dispatch<
-    SetStateAction<AppUser["customformFileds"]>
+    SetStateAction<AppUser["customformFields"]>
   >;
 };
 
@@ -29,8 +29,8 @@ export default function UserDataContextProvider({
   const [canContinue, setCanContinue] = useState<AppUser["canContinue"] | null>(
     null,
   );
-  const [customformFileds, setCustomFormFields] = useState<
-    AppUser["customformFileds"] | null
+  const [customformFields, setCustomFormFields] = useState<
+    AppUser["customformFields"] | null
   >(null);
 
   return (
@@ -44,7 +44,7 @@ export default function UserDataContextProvider({
         setEmail,
         canContinue,
         setCanContinue,
-        customformFileds,
+        customformFields,
         setCustomFormFields,
       }}
     >

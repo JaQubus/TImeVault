@@ -7,6 +7,7 @@ import ApiLinks from "../apiLinks";
 import PageTemplate from "../templates/pageTemplate";
 import FormErrorWrap from "../templates/formErrorWrap";
 import FormErrorParahraph from "../templates/formErrorParagraph";
+import { useUserDataContext } from "../userContextProvider";
 
 const Form = () => {
   type FormProps = DefaultForm;
@@ -27,6 +28,8 @@ const Form = () => {
       console.error("Error submitting form", error);
     }
   };
+
+  const { customformFields } = useUserDataContext();
 
   return (
     <PageTemplate>
@@ -80,6 +83,8 @@ const Form = () => {
           </button>
         </FormErrorWrap>
       </form>
+
+      <div>Or create your own time capsule!</div>
     </PageTemplate>
   );
 };

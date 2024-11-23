@@ -16,5 +16,5 @@ export type AppUser = {
   email: string | null;
   username: string | null;
   canContinue: boolean | null;
-  customformFileds: CustomFormField[] | null;
+  customformFields: CustomFormField[] | null;
 };

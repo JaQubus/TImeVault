@@ -7,8 +7,6 @@ import FormErrorWrap from "./formErrorWrap";
 import FormErrorParahraph from "./formErrorParagraph";
 
 const AddNewFormFields = () => {
-  const { customformFileds, setCustomFields } = useUserDataContext();
-
   type FormProps = CustomFormField;
 
   const {
