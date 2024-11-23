@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
+import styles from "./styles.module.scss";
 
 type PageTemplateProps = {
   children: ReactNode;
@@ -8,9 +9,9 @@ type PageTemplateProps = {
 
 const PageTemplate = ({ children }: PageTemplateProps) => {
   return (
-    <>
-      <main className="text-teal-900">{children}</main>
-    </>
+    <div className={styles.main}> 
+      <main className={styles.page}>{children}</main>
+    </div>
   );
 };
 
