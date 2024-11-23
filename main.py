@@ -97,7 +97,7 @@ async def create_user(request: Request, db: AsyncSession = Depends(models.get_db
         await db.commit()
         await db.refresh(db_user)
         await db.close()
-        return JSONResponse(content={"Success": "User created successfully"}, status_code=200)
+        return JSONResponse(content={"Success": "User created successfully", "user_id": data['user_id']}, status_code=200)
 
     except SQLAlchemyError as sqle:
         print(sqle)
