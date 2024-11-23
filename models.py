@@ -55,7 +55,6 @@ class User(Base):
             "name": self.username,
         }
 
-
 class EmailRequestCreateSchema(BaseModel):
     email_id: uuid.UUID | None = None
     user_id: uuid.UUID | None = None
