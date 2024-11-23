@@ -13,13 +13,20 @@ export default function MainContent() {
   const [message, setMessage] = useState<string[] | null>(null);
   const [submit, setSubmit] = useState<boolean>(false);
   const { username, userId, email } = useUserDataContext();
+  const [finalImages, setFinalImages] = useState<string[]>([]);
+  const [finalGoals, setFinalGoals] = useState<
+    { id: number; goal: string; progress: number }[]
+  >([]);
 
   const paragraphs = Array.from({ length: 4 }, (_, index) => (
     <Paragraph
       key={index}
+      id={index}
       setMessage={setMessage}
       submit={submit}
       setSubmit={setSubmit}
+      setFinalGoals={setFinalGoals}
+      setFinalImages={setFinalImages}
     />
   ));
 
@@ -48,4 +55,3 @@ export default function MainContent() {
     </div>
   );
 }
-

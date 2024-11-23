@@ -12,12 +12,10 @@ type ParagraphProps = {
   submit: boolean;
   setSubmit: React.Dispatch<SetStateAction<boolean>>;
   id: number;
-  removeParagraph: (id: number) => void;
 };
 
 export default function Paragraph({
   id,
-  removeParagraph,
   setFinalGoals,
   submit,
   setSubmit,
@@ -36,12 +34,22 @@ export default function Paragraph({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  if(submit) {
-      if()
-
+  if (submit) {
+    if (textareaRef.current && textareaRef.current.value !== "") {
+      setMessage((prev) =>
+        prev
+          ? [...prev, textareaRef.current.value]
+          : [textareaRef.current.value],
+      );
+    }
+    if (images.length > 0) {
+      setFinalImages((prev) => (prev ? [...prev, ...images] : images));
+    }
+    if (goals.length > 0) {
+      setFinalGoals((prev) => (prev ? [...prev, ...goals] : goals));
+    }
     setSubmit(false);
   }
-
   const handleButtonClick = (event: React.MouseEvent) => {
     setCursorPosition({ x: event.clientX, y: event.clientY });
     setShowDropdown(!showDropdown);
@@ -64,10 +72,6 @@ export default function Paragraph({
     if (type === "Text") {
       setShowTextarea(true);
     }
-  };
-
-  const handleRemoveParagraph = () => {
-    removeParagraph(id);
   };
 
   const addGoal = () => {
@@ -120,12 +124,7 @@ export default function Paragraph({
             placeholder="Write your message here..."
             ref={textareaRef}
           ></textarea>
-          <button
-            onClick={handleRemoveParagraph}
-            className={styles.remove_button}
-          >
-            Remove
-          </button>
+          <button className={styles.remove_button}>Remove</button>
         </div>
       )}
       {paragraphType === "Question" && (
@@ -140,12 +139,7 @@ export default function Paragraph({
             className={styles.input}
             placeholder="Enter your answer here..."
           />
-          <button
-            onClick={handleRemoveParagraph}
-            className={styles.remove_button}
-          >
-            Remove
-          </button>
+          <button className={styles.remove_button}>Remove</button>
         </div>
       )}
       {paragraphType === "Goals" && (
@@ -243,4 +237,3 @@ export default function Paragraph({
     </div>
   );
 }
-
