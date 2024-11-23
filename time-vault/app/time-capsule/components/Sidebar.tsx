@@ -4,9 +4,11 @@ import styles from "../styles.module.scss";
 export default function Sidebar() {
   return (
     <aside className={styles.sidebar}>
-    <div className={styles.logo_container}>
-        <img src="logo.png" alt="Logo" />
-    </div>
+        <a href="/time-capsule">
+            <div className={styles.logo_container}>
+                <img src="logo.png" alt="Logo" />
+            </div>
+        </a>
 
 <div className={styles.sidebar_items}>
     <a className={styles.sidebar_item}>

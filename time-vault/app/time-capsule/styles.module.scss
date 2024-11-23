@@ -1,5 +1,6 @@
 .container {
-    background: #2C3531;
+    background: rgb(44,53,49);
+    background: linear-gradient(90deg, rgba(44,53,49,1) 0%, rgba(17,100,102,1) 100%);   
     display: flex;
     color: white;
     .sidebar {
@@ -113,9 +114,20 @@
                     cursor: pointer;
                 }
             }
+            .add_paragraph_button {
+                border: white 1px dashed;
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+            .add_paragraph_button:hover {
+                background: rgba(209, 232, 226, 0.1);
+                transition: ease 0.3s;
+            }
             .textarea {
                 width: 100%;
-                background: #2C3531;
+                background: rgba(209, 232, 226, 0.15);
                 height: 200px;
                 padding: 10px;
                 font-size: 16px;
@@ -125,16 +137,23 @@
             }
             .remove_button {
                 margin-top: 10px;
-                background-color: #ff4d4d;
                 color: white;
                 border: none;
                 padding: 10px;
                 border-radius: 5px;
                 cursor: pointer;
             }
-            
+            .paragraph {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                padding: 10px;
+                border-radius: 5px;
+            }
             .remove_button:hover {
-                background-color: #ff1a1a;
+                background: rgba(136, 0, 0, 0.4);
+                transition: ease 0.3s;
             }
         }
         .main_form {
@@ -150,9 +169,9 @@
             }
             .main_input {
                 display: flex;
-                background: #2C3531;
                 flex-direction: column;
                 border: 2px solid #ffffff;
+                background : rgba(209, 232, 226, 0.15);
                 width: 25vw;
                 border-radius: 10px;
                 gap: 10px;
@@ -178,7 +197,7 @@
 
 .dropdown_menu {
     position: fixed;
-    background-color: rgb(37, 48, 53);
+    background-color: rgba(37, 48, 53, 0.8);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     width: 10vw;
