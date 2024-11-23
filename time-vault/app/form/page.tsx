@@ -30,61 +30,68 @@ const Form = () => {
   };
 
   const { customformFields } = useUserDataContext();
-
   return (
     <PageTemplate>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormErrorWrap>
-          <div>
-            <label htmlFor="target">Target:</label>
-            <input
-              id="target"
-              {...register("target", {
-                validate: (target) =>
-                  target && target.length <= 100
-                    ? true
-                    : "Target must be below 100 chars",
-                required: {
-                  value: true,
-                  message: "Target is required",
-                },
-              })}
-              type="text"
-              placeholder="Your Target"
-              name="target"
-            />
-            <FormErrorParahraph
-              errorObject={errors.target}
-            ></FormErrorParahraph>
-          </div>
-          <div>
-            <label htmlFor="target">Due:</label>
-            <input
-              id="due"
-              {...register("due", {
-                validate: (due) => {
-                  if (due <= 0) return "Due year must be at least 1";
-                  if (due % 1 !== 0) return "Due year must be an integer";
-                  return true;
-                },
-                required: {
-                  value: true,
-                  message: "Due year is required",
-                },
-              })}
-              type="text"
-              placeholder="Due Year"
-              name="due"
-            />
-            <FormErrorParahraph errorObject={errors.due}></FormErrorParahraph>
-          </div>
-          <button type="submit" disabled={isSubmitting}>
-            Submit
-          </button>
-        </FormErrorWrap>
+        {!customformFields || customformFields.length === 0 ? (
+          <FormErrorWrap>
+            <div>
+              <label htmlFor="target">Target:</label>
+              <input
+                id="target"
+                {...register("target", {
+                  validate: (target) =>
+                    target && target.length <= 100
+                      ? true
+                      : "Target must be below 100 chars",
+                  required: {
+                    value: true,
+                    message: "Target is required",
+                  },
+                })}
+                type="text"
+                placeholder="Your Target"
+                name="target"
+              />
+              <FormErrorParahraph
+                errorObject={errors.target}
+              ></FormErrorParahraph>
+            </div>
+            <div>
+              <label htmlFor="due">Due:</label>
+              <input
+                id="due"
+                {...register("due", {
+                  validate: (due) => {
+                    if (due <= 0) return "Due year must be at least 1";
+                    if (due % 1 !== 0) return "Due year must be an integer";
+                    return true;
+                  },
+                  required: {
+                    value: true,
+                    message: "Due year is required",
+                  },
+                })}
+                type="text"
+                placeholder="Due Year"
+                name="due"
+              />
+              <FormErrorParahraph errorObject={errors.due}></FormErrorParahraph>
+            </div>
+            <button type="submit" disabled={isSubmitting}>
+              Submit
+            </button>
+          </FormErrorWrap>
+        ) : (
+          customformFields.map((field, index) => (
+            <div key={index}>
+              <h3>{field.title}</h3>
+              <p>{field.caption}</p>
+              <small>Due: {field.due?.toString()}</small>
+            </div>
+          ))
+        )}
       </form>
-
-      <div>Or create your own time capsule!</div>
     </PageTemplate>
   );
 };

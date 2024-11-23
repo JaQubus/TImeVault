@@ -16,10 +16,9 @@ const AddNewFormFields = () => {
     getValues,
     setError,
   } = useForm<FormProps>();
+  const { setCustomFormFields } = useUserDataContext();
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
-    const { setCustomFormFields } = useUserDataContext();
-
     const customField: CustomFormField = {
       title: data.title,
       due: data.due,
