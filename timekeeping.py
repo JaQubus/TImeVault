@@ -37,9 +37,13 @@ async def check_times() -> None:
     async with await models.get_db() as db:
         while True:
             query = await db.execute(select(models.EmailRequestCreate))
-            row = query.all()
-            for user in row:
-                print(user)
+            rows = query.all()
+            for row in rows:
+                for email in row:
+                    local_time = tz_cet.localize(email.date_to_send)
+                    if datetime.datetime.now(tz_cet) > local_time:
+                        print(email.message) # Send email here
+                        # delete row from db
                 # send_date = tz_cet.localize(row.)
 
 
