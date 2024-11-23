@@ -9,7 +9,7 @@ type PageTemplateProps = {
 const PageTemplate = ({ children }: PageTemplateProps) => {
   return (
     <>
-      <main>{children}</main>
+      <main className="text-teal-900">{children}</main>
     </>
   );
 };

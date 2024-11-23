@@ -11,6 +11,7 @@ import { navigate } from "../actions/navigate";
 
 type FormProps = {
   email: string | null;
+  password: string | null;
 };
 
 export default function gettingStarted() {
@@ -55,6 +56,28 @@ export default function gettingStarted() {
             name="email"
           />
           <FormErrorParahraph errorObject={errors.email}></FormErrorParahraph>
+        </FormErrorWrap>
+        <FormErrorWrap>
+          <input
+            id="password"
+            {...register("password", {
+              validate: (password) => {
+                if (!password || !Regex.password.test(password))
+                  return "Password must be At least 8 char long";
+                return true;
+              },
+              required: {
+                value: true,
+                message: "Password is required",
+              },
+            })}
+            type="password"
+            placeholder="Password"
+            name="password"
+          />
+          <FormErrorParahraph
+            errorObject={errors.password}
+          ></FormErrorParahraph>
         </FormErrorWrap>
         <button type="submit" disabled={isSubmitting}>
           Submit
