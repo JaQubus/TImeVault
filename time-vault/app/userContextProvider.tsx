@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, SetStateAction, useState } from "react";
+import React, { ReactNode, SetStateAction, useContext, useState } from "react";
 import { AppUser } from "@/app/types";
 import { createContext } from "react";
 
@@ -13,6 +13,9 @@ type ContextType = AppUser & {
   setUsername: React.Dispatch<SetStateAction<AppUser["username"]>>;
   setEmail: React.Dispatch<SetStateAction<AppUser["email"]>>;
   setCanContinue: React.Dispatch<SetStateAction<AppUser["canContinue"]>>;
+  setCustomFormFields: React.Dispatch<
+    SetStateAction<AppUser["customformFileds"]>
+  >;
 };
 
 export const UserContext = createContext<ContextType | null>(null);
@@ -26,6 +29,9 @@ export default function UserDataContextProvider({
   const [canContinue, setCanContinue] = useState<AppUser["canContinue"] | null>(
     null,
   );
+  const [customformFileds, setCustomFormFields] = useState<
+    AppUser["customformFileds"] | null
+  >(null);
 
   return (
     <UserContext.Provider
@@ -38,9 +44,20 @@ export default function UserDataContextProvider({
         setEmail,
         canContinue,
         setCanContinue,
+        customformFileds,
+        setCustomFormFields,
       }}
     >
       {children}
     </UserContext.Provider>
   );
+}
+
+export function useUserDataContext() {
+  const context = useContext(UserContext);
+  if (!context) {
+    console.error("no context");
+    throw new Error("user context shall be not null");
+  }
+  return context;
 }

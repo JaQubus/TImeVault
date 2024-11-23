@@ -6,7 +6,6 @@ import OLF from "../OneLastFetch";
 import ApiLinks from "../apiLinks";
 import PageTemplate from "../templates/pageTemplate";
 import FormErrorWrap from "../templates/formErrorWrap";
-import { argv0 } from "process";
 import FormErrorParahraph from "../templates/formErrorParagraph";
 
 const Form = () => {

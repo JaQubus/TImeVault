@@ -1,3 +1,10 @@
+export type CustomFormField = {
+  title: string | null;
+  due: Date | null;
+  caption?: string | null;
+  image?: string | null;
+};
+
 export type DefaultForm = {
   target: string | null;
   due: number;
@@ -9,4 +16,5 @@ export type AppUser = {
   email: string | null;
   username: string | null;
   canContinue: boolean | null;
+  customformFileds: CustomFormField[] | null;
 };
