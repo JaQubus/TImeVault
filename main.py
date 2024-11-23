@@ -17,15 +17,14 @@ import asyncio
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    if task:
-        print("Starting up")
-        start_task()
-        yield
-        task.cancel()
-        try:
-            await task
-        except asyncio.CancelledError:
-            print("Background task was cancelled.")
+    print("Starting up")
+    start_task()
+    yield
+    task.cancel()
+    try:
+        await task
+    except asyncio.CancelledError:
+        print("Background task was cancelled.")
 
 app = FastAPI(lifespan=lifespan)
 # bro did NOT cook anything
